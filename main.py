@@ -14,7 +14,7 @@ import pickle
 ENV = os.getenv("ENVIRONMENT", "development")
 
 if ENV == "production":
-    allowed_origins = ["https://creador-excels.vercel.app/"]  
+    allowed_origins = ["https://creador-excels.vercel.app"]  # sin barra final
 else:
     allowed_origins = ["*"]  
 
@@ -46,10 +46,10 @@ API_TOKEN = os.getenv("API_TOKEN", "supersecreto")
 
 @app.middleware("http")
 async def check_token(request: Request, call_next):
-    # Permite el acceso a la documentación sin token (opcional)
+    # Permite el acceso a la documentación y a la raíz sin token
     if request.method == "OPTIONS":
         return await call_next(request)
-    if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi.json"):
+    if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi.json") or request.url.path == "/":
         return await call_next(request)
     # Verifica el header personalizado
     token = request.headers.get("x-api-token")

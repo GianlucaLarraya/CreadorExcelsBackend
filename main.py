@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, File, UploadFile, Form, Request, Query
+from fastapi import FastAPI, File, UploadFile, Form, Request, Query, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
@@ -14,7 +14,7 @@ import pickle
 ENV = os.getenv("ENVIRONMENT", "development")
 
 if ENV == "production":
-    allowed_origins = ["https://creador-excels.vercel.app"]  
+    allowed_origins = ["https://creador-excels.vercel.app/"]  
 else:
     allowed_origins = ["*"]  
 
@@ -41,6 +41,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+API_TOKEN = os.getenv("API_TOKEN", "supersecreto")
+
+@app.middleware("http")
+async def check_token(request: Request, call_next):
+    # Permite el acceso a la documentación sin token (opcional)
+    if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi.json"):
+        return await call_next(request)
+    # Verifica el header personalizado
+    token = request.headers.get("x-api-token")
+    if token != API_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return await call_next(request)
 
 # Estructura temporal para guardar prendas (en memoria)
 pedido_prendas = []

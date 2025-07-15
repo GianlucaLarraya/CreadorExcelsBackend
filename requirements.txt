@@ -1,6 +1,7 @@
 fastapi
-uvicorn[standard]
-openpyxl
-python-multipart 
+uvicorn
 cloudinary
-googleapiclient
+python-dotenv
+google-api-python-client
+google-auth
+google-auth-oauthlib

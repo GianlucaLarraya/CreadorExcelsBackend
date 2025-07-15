@@ -11,6 +11,16 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request as GoogleRequest
 import pickle
 
+
+import base64
+
+   # Solo si el archivo binario no existe ya
+if os.path.exists("token.pickle.b64") and not os.path.exists("token.pickle"):
+    with open("token.pickle.b64", "r") as f:
+        b64data = f.read()
+    with open("token.pickle", "wb") as f:
+        f.write(base64.b64decode(b64data))
+
 ENV = os.getenv("ENVIRONMENT", "development")
 
 if ENV == "production":

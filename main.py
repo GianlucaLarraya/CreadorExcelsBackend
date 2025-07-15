@@ -11,6 +11,13 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request as GoogleRequest
 import pickle
 
+ENV = os.getenv("ENVIRONMENT", "development")
+
+if ENV == "production":
+    allowed_origins = ["https://creador-excels.vercel.app/"]  
+else:
+    allowed_origins = ["*"]  
+
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
@@ -29,7 +36,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

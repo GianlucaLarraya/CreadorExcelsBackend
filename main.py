@@ -14,7 +14,7 @@ import pickle
 ENV = os.getenv("ENVIRONMENT", "development")
 
 if ENV == "production":
-    allowed_origins = ["https://creador-excels.vercel.app/"]  
+    allowed_origins = ["https://creador-excels.vercel.app"]  
 else:
     allowed_origins = ["*"]  
 

@@ -47,6 +47,8 @@ API_TOKEN = os.getenv("API_TOKEN", "supersecreto")
 @app.middleware("http")
 async def check_token(request: Request, call_next):
     # Permite el acceso a la documentación sin token (opcional)
+    if request.method == "OPTIONS":
+        return await call_next(request)
     if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi.json"):
         return await call_next(request)
     # Verifica el header personalizado
